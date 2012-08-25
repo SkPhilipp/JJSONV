@@ -2,12 +2,10 @@ package skillable.jjsonv.validators;
 
 import org.codehaus.jackson.JsonNode;
 
-public class BooleanValidator extends Validator {
+public class BooleanValidator extends ElementValidator {
 
-	@Override
-	public void validate(JsonNode node) throws ValidationException {
-		if (node.isBoolean() == false)
-			throw new ValidationException(this, node);
+	public boolean ok(JsonNode node) {
+		return node.isBoolean();
 	}
 
 	public BooleanValidator(int schemaLine) {

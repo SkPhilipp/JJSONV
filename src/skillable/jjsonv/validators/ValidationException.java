@@ -1,36 +1,26 @@
 package skillable.jjsonv.validators;
 
-import org.codehaus.jackson.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ValidationException extends Exception {
-
-	// -- Exception Message -------------------------------
-
-	static String buildMessage(Validator validator, JsonNode node) {
-		final Integer line = validator.getSchemaLine();
-		final String text = node.asText().substring(0, Math.min(50, node.asText().length()));
-		return String.format("Validation error at schema line %d, node value: \"%s\"", line, text);
-	}
-
-	// -- Getters, Constructor, Etc. ----------------------
+public class ValidationException extends Throwable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JsonNode node;
-	private final Validator validator;
+	private final List<ValidationExceptionElement> trace;
 
-	public JsonNode getNode() {
-		return node;
+	public List<ValidationExceptionElement> getTrace() {
+		return this.trace;
 	}
 
-	public Validator getValidator() {
-		return validator;
+	public ValidationException(ValidationExceptionElement start) {
+		super();
+		this.trace = new ArrayList<ValidationExceptionElement>();
+		this.trace.add(start);
 	}
 
-	public ValidationException(Validator validator, JsonNode node) {
-		super(ValidationException.buildMessage(validator, node));
-		this.validator = validator;
-		this.node = node;
+	public void add(ValidationExceptionElement element) {
+		this.trace.add(element);
 	}
 
 }

@@ -4,15 +4,13 @@ import java.util.regex.Pattern;
 
 import org.codehaus.jackson.JsonNode;
 
-public class RegexValidator extends Validator {
+public class RegexValidator extends ElementValidator {
+
+	public boolean ok(JsonNode node) {
+		return node.isTextual() && pattern.matcher(node.asText()).find();
+	}
 
 	private final Pattern pattern;
-
-	@Override
-	public void validate(JsonNode node) throws ValidationException {
-		if (node.isTextual() == false || pattern.matcher(node.asText()).find() == false)
-			throw new ValidationException(this, node);
-	}
 
 	public RegexValidator(int schemaLine, String regex) {
 		super(schemaLine);

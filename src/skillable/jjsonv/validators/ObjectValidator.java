@@ -19,14 +19,23 @@ public class ObjectValidator extends Validator {
 	}
 
 	@Override
-	public void validate(JsonNode node) throws ValidationException {
-		for (Entry<String, Validator> entry : map.entrySet()) {
-			final String name = entry.getKey();
-			final Validator validator = entry.getValue();
-			if (node.has(name) == false) {
-				throw new ValidationException(this, node);
+	public void validate(JsonNode node, String nodeName, Integer nodeIndex)
+			throws ValidationException {
+		try {
+			for (Entry<String, Validator> entry : map.entrySet()) {
+				final String name = entry.getKey();
+				final Validator validator = entry.getValue();
+				if (node.has(name) == false) {
+					throw new ValidationException(
+							new ValidationExceptionElement(this, node, name,
+									null));
+				}
+				validator.validate(node.get(name), name, null);
 			}
-			validator.validate(node.get(name));
+		} catch (ValidationException e) {
+			e.add(new ValidationExceptionElement(this, node, nodeName,
+					nodeIndex));
+			throw e;
 		}
 	}
 

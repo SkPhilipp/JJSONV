@@ -2,12 +2,10 @@ package skillable.jjsonv.validators;
 
 import org.codehaus.jackson.JsonNode;
 
-public class StringValidator extends Validator {
+public class StringValidator extends ElementValidator {
 
-	@Override
-	public void validate(JsonNode node) throws ValidationException {
-		if (node.isTextual() == false)
-			throw new ValidationException(this, node);
+	public boolean ok(JsonNode node) {
+		return node.isTextual();
 	}
 
 	public StringValidator(int schemaLine) {
