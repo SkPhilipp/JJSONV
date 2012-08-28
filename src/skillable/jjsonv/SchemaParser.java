@@ -3,6 +3,8 @@ package skillable.jjsonv;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,15 +17,19 @@ import skillable.jjsonv.validators.RegexValidator;
 import skillable.jjsonv.validators.StringValidator;
 import skillable.jjsonv.validators.Validator;
 
-//TODO: Schema Parsing exception classes
 public class SchemaParser {
 
 	public final static Pattern LinePattern = Pattern
 			.compile("^([\\t]*)([a-zA-Z0-9 ]*)[\\s]*:[\\s]*([\\S]+)$");
 
-	public static ObjectValidator load(File file) throws Exception {
+	public static ObjectValidator load(File file)
+			throws SchemaParsingException, IOException {
+		return SchemaParser.load(new BufferedReader(new FileReader("")));
+	}
 
-		final BufferedReader reader = new BufferedReader(new FileReader(file));
+	public static ObjectValidator load(Reader reader)
+			throws SchemaParsingException, IOException {
+		BufferedReader lineReader = new BufferedReader(reader);
 		String line = null;
 		Integer lineCount = 0;
 
@@ -32,13 +38,14 @@ public class SchemaParser {
 		stack.push(top);
 
 		try {
-			while ((line = reader.readLine()) != null) {
+			while ((line = lineReader.readLine()) != null) {
 				lineCount++;
 				// -- Math & extract data
 				final Matcher matcher = LinePattern.matcher(line);
 				if (matcher.find() == false)
-					throw new Exception(String.format(
-							"Syntax error at line %d:\n\t%s", lineCount, line));
+					throw new SchemaParsingException(String.format(
+							"Syntax error at line %d ( \"%s\" )", lineCount,
+							line));
 				int currentLevel = 1 + matcher.group(1).length();
 				final String name = matcher.group(2);
 				final String type = matcher.group(3);
@@ -47,8 +54,8 @@ public class SchemaParser {
 					stack.pop();
 				}
 				if (currentLevel > stack.size()) {
-					throw new Exception("Unexpected indentation at line: "
-							+ lineCount);
+					throw new SchemaParsingException(String.format(
+							"Unexpected indentation at line %d", lineCount));
 				}
 				// -- Make new Validator corresponding to the type
 				final Validator validator;
@@ -76,14 +83,15 @@ public class SchemaParser {
 					validator = new RegexValidator(regex);
 					stack.peek().set(name, validator);
 				} else {
-					throw new Exception("Unknown validator type: " + type);
+					throw new SchemaParsingException(String.format(
+							"Unknown validator type \"%s\" at line %d", line,
+							lineCount));
 				}
 			}
 		} finally {
-			reader.close();
+			lineReader.close();
 		}
 		return top;
 
 	}
-
 }
