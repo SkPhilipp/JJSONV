@@ -25,15 +25,16 @@ public class SchemaParser {
 	public final static Pattern LinePattern = Pattern
 			.compile("^([\\t]*)([a-zA-Z0-9 ]*)[\\s]*:[\\s]*([\\S]+)$");
 
-	public final Map<String, ElementValidator> elementValidators;
+	public final Map<String, Class<? extends ElementValidator>> elementValidators;
 
 	public SchemaParser() {
-		elementValidators = new HashMap<String, ElementValidator>();
-		elementValidators.put("String", new StringValidator());
-		elementValidators.put("Bool", new BooleanValidator());
-		elementValidators.put("Boolean", new BooleanValidator());
-		elementValidators.put("Int", new IntValidator());
-		elementValidators.put("Integer", new IntValidator());
+
+		elementValidators = new HashMap<String, Class<? extends ElementValidator>>();
+		elementValidators.put("String", StringValidator.class);
+		elementValidators.put("Bool", BooleanValidator.class);
+		elementValidators.put("Boolean", BooleanValidator.class);
+		elementValidators.put("Int", IntValidator.class);
+		elementValidators.put("Integer", IntValidator.class);
 	}
 
 	/**
@@ -42,7 +43,7 @@ public class SchemaParser {
 	 * @param denoter
 	 * @param validator
 	 */
-	public void add(String denoter, ElementValidator validator) {
+	public void add(String denoter, Class<? extends ElementValidator> validator) {
 		this.elementValidators.put(denoter, validator);
 	}
 
@@ -100,8 +101,15 @@ public class SchemaParser {
 				Validator validator = new RegexValidator(regex);
 				stack.peek().set(name, validator);
 			} else if (elementValidators.containsKey(type)) {
-				Validator validator = elementValidators.get(type);
-				stack.peek().set(name, validator);
+				try {
+					Validator validator = elementValidators.get(type)
+							.newInstance();
+					stack.peek().set(name, validator);
+				} catch (Exception e) {
+					throw new SchemaParsingException(String.format(
+							"Couldn't instantiate a validator of type \"%s\"",
+							type));
+				}
 			} else {
 				throw new SchemaParsingException(String.format(
 						"Unknown validator type \"%s\" at line %d",
