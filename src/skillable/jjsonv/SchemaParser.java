@@ -25,15 +25,19 @@ public class SchemaParser {
 	public final static Pattern LinePattern = Pattern
 			.compile("^([\\t]*)([a-zA-Z0-9 ]*)[\\s]*:[\\s]*([\\S]+)$");
 
-	public final Map<String, Class<? extends ElementValidator>> elementValidators;
+	public final Map<String, ElementValidator> elementValidators;
 
 	public SchemaParser() {
-		elementValidators = new HashMap<String, Class<? extends ElementValidator>>();
-		elementValidators.put("String", StringValidator.class);
-		elementValidators.put("Bool", BooleanValidator.class);
-		elementValidators.put("Boolean", BooleanValidator.class);
-		elementValidators.put("Int", IntValidator.class);
-		elementValidators.put("Integer", IntValidator.class);
+		elementValidators = new HashMap<String, ElementValidator>();
+		elementValidators.put("String", new StringValidator());
+		elementValidators.put("Bool", new BooleanValidator());
+		elementValidators.put("Boolean", new BooleanValidator());
+		elementValidators.put("Int", new IntValidator());
+		elementValidators.put("Integer", new IntValidator());
+	}
+
+	public void add(String denoter, ElementValidator validator) {
+		this.elementValidators.put(denoter, validator);
 	}
 
 	public ObjectValidator load(Reader reader) throws SchemaParsingException,
@@ -82,13 +86,7 @@ public class SchemaParser {
 				validator = new RegexValidator(regex);
 				stack.peek().set(name, validator);
 			} else if (elementValidators.containsKey(type)) {
-				try {
-					validator = elementValidators.get(type).newInstance();
-				} catch (Exception e) {
-					throw new SchemaParsingException(String.format(
-							"Couldn't instantiate a validator of type \"%s\"",
-							type));
-				}
+				validator = elementValidators.get(type);
 				stack.peek().set(name, validator);
 			} else {
 				throw new SchemaParsingException(String.format(
