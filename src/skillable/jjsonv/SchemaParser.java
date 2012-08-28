@@ -24,7 +24,7 @@ public class SchemaParser {
 
 	public static ObjectValidator load(File file)
 			throws SchemaParsingException, IOException {
-		return SchemaParser.load(new BufferedReader(new FileReader("")));
+		return SchemaParser.load(new BufferedReader(new FileReader(file)));
 	}
 
 	public static ObjectValidator load(Reader reader)
