@@ -12,13 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import skillable.jjsonv.validators.ArrayValidator;
-import skillable.jjsonv.validators.BooleanValidator;
-import skillable.jjsonv.validators.ElementValidator;
-import skillable.jjsonv.validators.IntValidator;
 import skillable.jjsonv.validators.ObjectValidator;
-import skillable.jjsonv.validators.RegexValidator;
-import skillable.jjsonv.validators.StringValidator;
 import skillable.jjsonv.validators.Validator;
+import skillable.jjsonv.validators.elements.BooleanValidator;
+import skillable.jjsonv.validators.elements.ElementValidator;
+import skillable.jjsonv.validators.elements.IntValidator;
+import skillable.jjsonv.validators.elements.RegexValidator;
+import skillable.jjsonv.validators.elements.StringValidator;
 
 public class SchemaParser {
 
@@ -36,12 +36,27 @@ public class SchemaParser {
 		elementValidators.put("Integer", new IntValidator());
 	}
 
+	/**
+	 * Adds a custom ElementValidator to this SchemaParser
+	 * 
+	 * @param denoter
+	 * @param validator
+	 */
 	public void add(String denoter, ElementValidator validator) {
 		this.elementValidators.put(denoter, validator);
 	}
 
+	/**
+	 * Creates an ObjectValidator from a reader, to validate JSON with
+	 * 
+	 * @throws SchemaParsingException
+	 *             when data is read from the reader that can't be parsed.
+	 */
+	// TODO: Support for ElementValidators with parameters (RegexValidator)
+	// TODO: Support for arrays of non Object[] type
 	public ObjectValidator load(Reader reader) throws SchemaParsingException,
 			IOException {
+
 		BufferedReader lineReader = new BufferedReader(reader);
 		String lineContent = null;
 		Integer lineCount = 0;
@@ -52,7 +67,7 @@ public class SchemaParser {
 
 		while ((lineContent = lineReader.readLine()) != null) {
 			lineCount++;
-			// -- Match & extract data
+			// Match & extract data
 			final Matcher matcher = LinePattern.matcher(lineContent);
 			if (matcher.find() == false)
 				throw new SchemaParsingException(String.format(
@@ -61,7 +76,7 @@ public class SchemaParser {
 			int currentLevel = 1 + matcher.group(1).length();
 			final String name = matcher.group(2);
 			final String type = matcher.group(3);
-			// -- Make stack correspond with tabs
+			// Make stack correspond with tabs in schema file
 			while (currentLevel < stack.size()) {
 				stack.pop();
 			}
@@ -69,24 +84,23 @@ public class SchemaParser {
 				throw new SchemaParsingException(String.format(
 						"Unexpected indentation at line %d", lineCount));
 			}
-			// -- Make new Validator corresponding to the type
-			final Validator validator;
+			// Make new Validator corresponding to the type
 			if ("Object".equals(type)) {
 				ObjectValidator nodeValidator = new ObjectValidator();
-				validator = nodeValidator;
+				Validator validator = nodeValidator;
 				stack.peek().set(name, validator);
 				stack.push(nodeValidator);
 			} else if ("Object[]".equals(type)) {
 				ObjectValidator nodeValidator = new ObjectValidator();
-				validator = new ArrayValidator(nodeValidator);
+				Validator validator = new ArrayValidator(nodeValidator);
 				stack.peek().set(name, validator);
 				stack.push(nodeValidator);
 			} else if (type.startsWith("Regex:")) {
 				String regex = type.substring("Regex:".length());
-				validator = new RegexValidator(regex);
+				Validator validator = new RegexValidator(regex);
 				stack.peek().set(name, validator);
 			} else if (elementValidators.containsKey(type)) {
-				validator = elementValidators.get(type);
+				Validator validator = elementValidators.get(type);
 				stack.peek().set(name, validator);
 			} else {
 				throw new SchemaParsingException(String.format(
@@ -98,9 +112,12 @@ public class SchemaParser {
 
 	}
 
+	/**
+	 * load(Reader) alternative, creates a FileReader and closes it when done
+	 */
 	public ObjectValidator load(File file) throws SchemaParsingException,
 			IOException {
-		Reader reader = new BufferedReader(new FileReader(file));
+		Reader reader = (new FileReader(file));
 		try {
 			return this.load(reader);
 		} finally {

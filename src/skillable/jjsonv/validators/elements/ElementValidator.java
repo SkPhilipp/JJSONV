@@ -1,7 +1,8 @@
-package skillable.jjsonv.validators;
+package skillable.jjsonv.validators.elements;
 
 import org.codehaus.jackson.JsonNode;
 
+import skillable.jjsonv.validators.Validator;
 import skillable.jjsonv.validators.trace.ValidationException;
 import skillable.jjsonv.validators.trace.ValidationParams;
 import skillable.jjsonv.validators.trace.ValidationTrace;
@@ -12,7 +13,7 @@ public abstract class ElementValidator extends Validator {
 	abstract public boolean ok(JsonNode json);
 
 	@Override
-	public void validate(ValidationTrace trace, ValidationParams params)
+	public final void validate(ValidationTrace trace, ValidationParams params)
 			throws ValidationException {
 		trace.add(new ValidationTraceElement(this, params));
 		if (this.ok(params.getNode()) == false) {

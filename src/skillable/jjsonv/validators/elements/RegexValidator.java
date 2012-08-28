@@ -1,4 +1,4 @@
-package skillable.jjsonv.validators;
+package skillable.jjsonv.validators.elements;
 
 import java.util.regex.Pattern;
 

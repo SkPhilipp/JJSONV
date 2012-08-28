@@ -20,7 +20,7 @@ public class ObjectValidator extends Validator {
 	}
 
 	@Override
-	protected void validate(ValidationTrace trace, ValidationParams params)
+	protected final void validate(ValidationTrace trace, ValidationParams params)
 			throws ValidationException {
 		JsonNode node = params.getNode();
 		trace.add(new ValidationTraceElement(this, params));
