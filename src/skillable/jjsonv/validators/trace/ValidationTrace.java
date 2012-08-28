@@ -7,7 +7,7 @@ public class ValidationTrace {
 
 	private final List<ValidationTraceElement> list;
 
-	public List<ValidationTraceElement> getTrace() {
+	public List<ValidationTraceElement> getElements() {
 		return this.list;
 	}
 
