@@ -28,7 +28,6 @@ public class SchemaParser {
 	public final Map<String, Class<? extends ElementValidator>> elementValidators;
 
 	public SchemaParser() {
-
 		elementValidators = new HashMap<String, Class<? extends ElementValidator>>();
 		elementValidators.put("String", StringValidator.class);
 		elementValidators.put("Bool", BooleanValidator.class);
