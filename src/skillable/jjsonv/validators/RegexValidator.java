@@ -12,8 +12,7 @@ public class RegexValidator extends ElementValidator {
 
 	private final Pattern pattern;
 
-	public RegexValidator(int schemaLine, String regex) {
-		super(schemaLine);
+	public RegexValidator(String regex) {
 		pattern = Pattern.compile(regex);
 	}
 

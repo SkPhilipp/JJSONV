@@ -1,0 +1,18 @@
+{
+	"model" : {
+		"name" : "ModelName",
+		"public" : false,
+		"members" : [
+			{
+				"name" : "Member1",
+				"size" : 12435678
+			},
+			{
+				"name" : "Member2",
+				"size" : -12435678
+			}
+		]
+	},
+	"pages" : [
+	]
+}

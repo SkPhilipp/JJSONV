@@ -8,8 +8,4 @@ public class BooleanValidator extends ElementValidator {
 		return node.isBoolean();
 	}
 
-	public BooleanValidator(int schemaLine) {
-		super(schemaLine);
-	}
-
 }

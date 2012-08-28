@@ -6,41 +6,49 @@ import java.util.Map.Entry;
 
 import org.codehaus.jackson.JsonNode;
 
+import skillable.jjsonv.validators.trace.ValidationException;
+import skillable.jjsonv.validators.trace.ValidationParams;
+import skillable.jjsonv.validators.trace.ValidationTrace;
+import skillable.jjsonv.validators.trace.ValidationTraceElement;
+
 public class ObjectValidator extends Validator {
 
-	/**
-	 * Map of each node name, with corresponding validator.
-	 */
 	private final Map<String, Validator> map;
 
-	public ObjectValidator(int schemaLine) {
-		super(schemaLine);
+	public ObjectValidator() {
 		map = new HashMap<String, Validator>();
 	}
 
 	@Override
-	public void validate(JsonNode node, String nodeName, Integer nodeIndex)
+	protected void validate(ValidationTrace trace, ValidationParams params)
 			throws ValidationException {
+		JsonNode node = params.getNode();
+		trace.add(new ValidationTraceElement(this, params));
 		try {
 			for (Entry<String, Validator> entry : map.entrySet()) {
 				final String name = entry.getKey();
 				final Validator validator = entry.getValue();
 				if (node.has(name) == false) {
-					throw new ValidationException(
-							new ValidationExceptionElement(this, node, name,
-									null));
+					throw new ValidationException(trace);
 				}
-				validator.validate(node.get(name), name, null);
+				ValidationParams memberParams = new ValidationParams(
+						node.get(name), name, false);
+				validator.validate(trace, memberParams);
 			}
 		} catch (ValidationException e) {
-			e.add(new ValidationExceptionElement(this, node, nodeName,
-					nodeIndex));
 			throw e;
 		}
+		trace.pop();
 	}
 
 	public void set(String key, Validator validator) {
 		this.map.put(key, validator);
+	}
+
+	public void validate(JsonNode node) throws ValidationException {
+		ValidationParams params = new ValidationParams(node, null, false);
+		ValidationTrace trace = new ValidationTrace();
+		validate(trace, params);
 	}
 
 }

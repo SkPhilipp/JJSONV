@@ -4,27 +4,35 @@ import java.util.Iterator;
 
 import org.codehaus.jackson.JsonNode;
 
+import skillable.jjsonv.validators.trace.ValidationException;
+import skillable.jjsonv.validators.trace.ValidationParams;
+import skillable.jjsonv.validators.trace.ValidationTrace;
+import skillable.jjsonv.validators.trace.ValidationTraceElement;
+
 public class ArrayValidator extends Validator {
 
-	private final ElementValidator elementValidator;
+	private final Validator validator;
 
-	public ArrayValidator(int schemaLine, ElementValidator validator) {
-		super(schemaLine);
-		this.elementValidator = validator;
+	public ArrayValidator(Validator validator) {
+		this.validator = validator;
 	}
 
 	@Override
-	public void validate(JsonNode node, String nodeName, Integer nodeIndex)
+	protected void validate(ValidationTrace trace, ValidationParams params)
 			throws ValidationException {
+		JsonNode node = params.getNode();
+		trace.add(new ValidationTraceElement(this, params));
 		if (node.isArray() == false)
-			throw new ValidationException(new ValidationExceptionElement(this,
-					node, nodeName, nodeIndex));
+			throw new ValidationException(trace);
 		final Iterator<JsonNode> iter = node.getElements();
-		int index = 0;
+		Integer index = 0;
 		while (iter.hasNext()) {
-			elementValidator.validate(iter.next(), null, index);
+			ValidationParams iterParams = new ValidationParams(iter.next(),
+					index.toString(), true);
+			validator.validate(trace, iterParams);
 			index++;
 		}
+		trace.pop();
 	}
 
 }

@@ -8,8 +8,4 @@ public class IntValidator extends ElementValidator {
 		return node.isInt();
 	}
 
-	public IntValidator(int schemaLine) {
-		super(schemaLine);
-	}
-
 }

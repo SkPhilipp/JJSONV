@@ -8,8 +8,4 @@ public class StringValidator extends ElementValidator {
 		return node.isTextual();
 	}
 
-	public StringValidator(int schemaLine) {
-		super(schemaLine);
-	}
-
 }

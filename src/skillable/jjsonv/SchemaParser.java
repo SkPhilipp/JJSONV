@@ -1,6 +1,7 @@
 package skillable.jjsonv;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -14,20 +15,20 @@ import skillable.jjsonv.validators.RegexValidator;
 import skillable.jjsonv.validators.StringValidator;
 import skillable.jjsonv.validators.Validator;
 
+//TODO: Schema Parsing exception classes
 public class SchemaParser {
 
 	public final static Pattern LinePattern = Pattern
 			.compile("^([\\t]*)([a-zA-Z0-9 ]*)[\\s]*:[\\s]*([\\S]+)$");
 
-	public static ObjectValidator load(String filename) throws Exception {
+	public static ObjectValidator load(File file) throws Exception {
 
-		final BufferedReader reader = new BufferedReader(new FileReader(
-				filename));
+		final BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = null;
 		Integer lineCount = 0;
 
 		final Stack<ObjectValidator> stack = new Stack<ObjectValidator>();
-		final ObjectValidator top = new ObjectValidator(lineCount);
+		final ObjectValidator top = new ObjectValidator();
 		stack.push(top);
 
 		try {
@@ -52,29 +53,27 @@ public class SchemaParser {
 				// -- Make new Validator corresponding to the type
 				final Validator validator;
 				if ("String".equals(type)) {
-					validator = new StringValidator(lineCount);
+					validator = new StringValidator();
 					stack.peek().set(name, validator);
 				} else if ("Boolean".equals(type)) {
-					validator = new BooleanValidator(lineCount);
+					validator = new BooleanValidator();
 					stack.peek().set(name, validator);
 				} else if ("Int".equals(type)) {
-					validator = new IntValidator(lineCount);
+					validator = new IntValidator();
 					stack.peek().set(name, validator);
 				} else if ("Object".equals(type)) {
-					ObjectValidator nodeValidator = new ObjectValidator(
-							lineCount);
+					ObjectValidator nodeValidator = new ObjectValidator();
 					validator = nodeValidator;
 					stack.peek().set(name, validator);
 					stack.push(nodeValidator);
 				} else if ("Object[]".equals(type)) {
-					ObjectValidator nodeValidator = new ObjectValidator(
-							lineCount);
-					validator = new ArrayValidator(lineCount, nodeValidator);
+					ObjectValidator nodeValidator = new ObjectValidator();
+					validator = new ArrayValidator(nodeValidator);
 					stack.peek().set(name, validator);
 					stack.push(nodeValidator);
 				} else if (type.startsWith("Regex:")) {
 					String regex = type.substring("Regex:".length());
-					validator = new RegexValidator(lineCount, regex);
+					validator = new RegexValidator(regex);
 					stack.peek().set(name, validator);
 				} else {
 					throw new Exception("Unknown validator type: " + type);
