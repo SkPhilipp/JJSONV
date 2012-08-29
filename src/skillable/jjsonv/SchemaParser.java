@@ -29,11 +29,11 @@ public class SchemaParser {
 
 	public SchemaParser() {
 		elementValidators = new HashMap<String, Class<? extends ElementValidator>>();
-		elementValidators.put("String", StringValidator.class);
-		elementValidators.put("Bool", BooleanValidator.class);
-		elementValidators.put("Boolean", BooleanValidator.class);
-		elementValidators.put("Int", IntValidator.class);
-		elementValidators.put("Integer", IntValidator.class);
+		this.add("String", StringValidator.class);
+		this.add("Bool", BooleanValidator.class);
+		this.add("Boolean", BooleanValidator.class);
+		this.add("Int", IntValidator.class);
+		this.add("Integer", IntValidator.class);
 	}
 
 	/**
