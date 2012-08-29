@@ -6,6 +6,7 @@ import org.codehaus.jackson.JsonNode;
 
 public class RegexValidator extends ElementValidator {
 
+	@Override
 	public boolean ok(JsonNode node) {
 		return node.isTextual() && pattern.matcher(node.asText()).find();
 	}
