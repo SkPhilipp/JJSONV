@@ -55,18 +55,31 @@ You can see where validation errors happen, this is pretty useful when returning
 ```
 Custom Element Validators
 =========================
-You can register your own validators at a SchemaParser using, for example:
+In SchemaParser the following standard validators are already registered;
 ```java
-	SchemaParser.add("String", StringValidator.class);
+	public SchemaParser() {
+		...
+		this.add("String", StringValidator.class);
+		this.add("Bool", BooleanValidator.class);
+		this.add("Boolean", BooleanValidator.class);
+		this.add("Int", IntValidator.class);
+		this.add("Integer", IntValidator.class);
+		...
+	}
 ```
-Example
--------
+You can register your own custom validators at a SchemaParser, the SchemaParser
+will then create instances of these validators when they are used in a schema file.
+For example:
+```java
+	SchemaParser.add("Thing", MyThingValidator.class);
+```
 Simple example of a validator that accepts JSON values that are integers or strings
 ```java
 import org.codehaus.jackson.JsonNode;
 
 public class IntOrStringValidator extends ElementValidator {
 
+	@Override
 	public boolean ok(JsonNode node) {
 		return node.isInt() || node.isTextual();
 	}
@@ -79,6 +92,7 @@ import org.codehaus.jackson.JsonNode;
 
 public class UserIdValidator extends ElementValidator {
 
+	@Override
 	public boolean ok(JsonNode node) {
 		if(node.isInt()){
 			int userId = node.getIntValue();
