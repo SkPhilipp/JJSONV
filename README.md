@@ -64,7 +64,8 @@ You can register your own custom validators at a SchemaParser, the SchemaParser
 will then create instances of these validators when they are used in a schema file.
 For example:
 ```java
-	SchemaParser.add("Thing", MyThingValidator.class);
+SchemaParser schemaParser = new SchemaParser();
+schemaParser.add("Thing", MyThingValidator.class);
 ```
 Simple example of a validator that accepts JSON values that are integers or strings
 ```java
