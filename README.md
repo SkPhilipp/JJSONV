@@ -61,7 +61,7 @@ You can register your own validators at a SchemaParser using, for example:
 ```
 Example
 -------
-Example of a validator that accepts JSON values that are integers or strings
+Simple example of a validator that accepts JSON values that are integers or strings
 ```java
 import org.codehaus.jackson.JsonNode;
 
@@ -69,6 +69,24 @@ public class IntOrStringValidator extends ElementValidator {
 
 	public boolean ok(JsonNode node) {
 		return node.isInt() || node.isTextual();
+	}
+
+}
+```
+Example of a validator that only accepts existing "users"
+```java
+import org.codehaus.jackson.JsonNode;
+
+public class UserIdValidator extends ElementValidator {
+
+	public boolean ok(JsonNode node) {
+		if(node.isInt()){
+			int userId = node.getIntValue();
+			if(MyDatabase.userExists(userId)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
