@@ -81,9 +81,15 @@ public class IntOrStringValidator extends ElementValidator {
 ```
 Validation Context
 ==================
-Example of a validator that only accepts existing "members" -- See also: test/tests/TestValidator.java
-This validator will create a map to store data its data in, the ValidationContext is returned
-by ```java SchemaValidator.validate(JsonNode)```
+ValidationContext is data that is passed to every ElementValidator, the ElementValidators can read from it
+and add more data to it - It's very useful for expensive loads such as a custom "UserValidator", so that after
+checking if your User objects exists in the database, and obtaining a reference to it; You can then store that
+already loaded data into the ValidationContext. The ValidationContext is returned
+by ```java SchemaValidator.validate(JsonNode)```, you can then read all your data from the ValidationContext.
+
+Here's an example of a validator that only accepts existing "members" -- See also: test/tests/TestValidator.java
+( This validator will create a map to store data it's data in - note that it doesn't check 
+wether or not the "member" was already loaded into the ValidationContext )
 ```java
 public class TestValidator extends ElementValidator {
 
