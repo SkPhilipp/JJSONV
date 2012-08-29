@@ -25,9 +25,9 @@ Validating
 	SchemaParser parser = new SchemaParser();
 	ObjectMapper mapper = new ObjectMapper();
 
-	ObjectValidator validator = parser.load(new File("schema.jsons"));
+	SchemaValidator schemaValidator = parser.load(new File("schema.jsons"));
 	try {
-		validator.validate(mapper.readTree(new File("data.json")));
+		schemaValidator.validate(mapper.readTree(new File("data.json")));
 	} catch(ValidationException e) {
 		// Invalid JSON!
 	}
@@ -37,13 +37,8 @@ Tracing
 -------
 You can see where validation errors happen, this is pretty useful when returning sending it back to a JavaScript web application.
 ```java
-
-	SchemaParser parser = new SchemaParser();
-	ObjectMapper mapper = new ObjectMapper();
-
-	ObjectValidator validator = parser.load(new File("schema.jsons"));
 	try {
-		validator.validate(mapper.readTree(new File("data.json")));
+		schemaValidator.validate(mapper.readTree(new File("false-data.json")));
 	} catch(ValidationException e) {
 		// Will print something like "object.members[0][1].inner[4].size"
 		// Depends on what you're validating of course.
@@ -75,33 +70,56 @@ For example:
 ```
 Simple example of a validator that accepts JSON values that are integers or strings
 ```java
-import org.codehaus.jackson.JsonNode;
-
 public class IntOrStringValidator extends ElementValidator {
 
 	@Override
-	public boolean ok(JsonNode node) {
+	public boolean ok(JsonNode node, ValidationContext context) {
 		return node.isInt() || node.isTextual();
 	}
 
 }
 ```
-Example of a validator that only accepts existing "users"
+Validation Context
+==================
+Example of a validator that only accepts existing "members" -- See also: test/tests/TestValidator.java
+This validator will create a map to store data its data in, the ValidationContext is returned
+by ```java SchemaValidator.validate(JsonNode)```
 ```java
-import org.codehaus.jackson.JsonNode;
-
-public class UserIdValidator extends ElementValidator {
+public class TestValidator extends ElementValidator {
 
 	@Override
-	public boolean ok(JsonNode node) {
-		if(node.isInt()){
-			int userId = node.getIntValue();
-			if(MyDatabase.userExists(userId)){
-				return true;
-			}
-		}
-		return false;
+	public boolean ok(JsonNode node, ValidationContext context) {
+		// Check for valid data
+		if (node.isTextual() == false)
+			return false;
+		// Load up our existing member
+		String key = node.getTextValue();
+		String value = MyDatabase.expensiveMemberLoad(key);
+		if (value == null)
+			return false;
+		// Get or create our map
+		@SuppressWarnings("unchecked")
+		Map<String, String> members = (Map<String, String>) context
+				.get("Members");
+		if (members == null)
+			members = new HashMap<String, String>();
+		// Add our member which we know exists
+		members.put(key, value);
+		// Store our members again
+		context.put("Members", members);
+		return true;
 	}
 
 }
+```
+Example on how to use the ValidationContext -- See also: test/tests/Tests.java
+```java
+	SchemaParser parser = new SchemaParser();
+	parser.add("Test", TestValidator.class);
+	SchemaValidator validator = parser.load(basicCustomSchema);
+	ValidationContext context = validator.validate(mapper.readTree(basicJson));
+	@SuppressWarnings("unchecked")
+	Map<String, String> members = (Map<String, String>) context.get("Members");
+	assertEquals("Data1", members.get("Member1"));
+	assertEquals("Data2", members.get("Member2"));
 ```
