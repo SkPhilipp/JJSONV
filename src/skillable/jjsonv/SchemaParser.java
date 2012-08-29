@@ -120,7 +120,8 @@ public class SchemaParser {
 	}
 
 	/**
-	 * load(Reader) alternative, creates a FileReader and closes it when done
+	 * SchemaParser.load(Reader) alternative. This creates a FileReader around
+	 * the given File, and closes it when done
 	 */
 	public ObjectValidator load(File file) throws SchemaParsingException,
 			IOException {
