@@ -17,8 +17,8 @@ public class ArrayValidator extends Validator {
 	}
 
 	@Override
-	protected final void validate(ValidationParams params)
-			throws ValidationException {
+	protected final void validate(ValidationParams params,
+			ValidationContext context) throws ValidationException {
 		JsonNode node = params.getNode();
 		try {
 			if (node.isArray() == false)
@@ -28,7 +28,7 @@ public class ArrayValidator extends Validator {
 			while (iter.hasNext()) {
 				ValidationParams iterParams = new ValidationParams(iter.next(),
 						index.toString(), true);
-				validator.validate(iterParams);
+				validator.validate(iterParams, context);
 				index++;
 			}
 		} catch (ValidationException e) {

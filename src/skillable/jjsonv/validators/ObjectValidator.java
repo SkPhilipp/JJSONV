@@ -19,8 +19,8 @@ public class ObjectValidator extends Validator {
 	}
 
 	@Override
-	protected final void validate(ValidationParams params)
-			throws ValidationException {
+	protected final void validate(ValidationParams params,
+			ValidationContext context) throws ValidationException {
 		try {
 			JsonNode node = params.getNode();
 			for (Entry<String, Validator> entry : map.entrySet()) {
@@ -31,7 +31,7 @@ public class ObjectValidator extends Validator {
 				}
 				ValidationParams memberParams = new ValidationParams(
 						node.get(name), name, false);
-				validator.validate(memberParams);
+				validator.validate(memberParams, context);
 			}
 		} catch (ValidationException e) {
 			e.add(new ValidationTraceElement(this, params));
@@ -41,11 +41,6 @@ public class ObjectValidator extends Validator {
 
 	public void set(String key, Validator validator) {
 		this.map.put(key, validator);
-	}
-
-	public void validate(JsonNode node) throws ValidationException {
-		ValidationParams params = new ValidationParams(node, null, false);
-		validate(params);
 	}
 
 }

@@ -5,7 +5,7 @@ import skillable.jjsonv.validators.trace.ValidationParams;
 
 public abstract class Validator {
 
-	abstract protected void validate(ValidationParams params)
-			throws ValidationException;
+	abstract protected void validate(ValidationParams params,
+			ValidationContext context) throws ValidationException;
 
 }
