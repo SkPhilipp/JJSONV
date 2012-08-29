@@ -45,11 +45,10 @@ You can see where validation errors happen, this is pretty useful when returning
 	try {
 		validator.validate(mapper.readTree(new File("data.json")));
 	} catch(ValidationException e) {
-		// You can use trace.getElements() for even deeper inspection
-		ValidationTrace trace = e.getTrace();
 		// Will print something like "object.members[0][1].inner[4].size"
 		// Depends on what you're validating of course.
-		System.out.println(trace);
+		System.out.println(e);
+		// You can use e.getElements() for even deeper inspection
 	}
 
 
