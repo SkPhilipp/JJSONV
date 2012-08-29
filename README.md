@@ -21,46 +21,44 @@ pages:Object[]
 Validating
 ==========
 ```java
-
-	SchemaParser parser = new SchemaParser();
-	ObjectMapper mapper = new ObjectMapper();
-
-	SchemaValidator schemaValidator = parser.load(new File("schema.jsons"));
-	try {
-		schemaValidator.validate(mapper.readTree(new File("data.json")));
-	} catch(ValidationException e) {
-		// Invalid JSON!
-	}
-
+SchemaParser parser = new SchemaParser();
+ObjectMapper mapper = new ObjectMapper();
+SchemaValidator schemaValidator = parser.load(new File("schema.jsons"));
+try {
+	schemaValidator.validate(mapper.readTree(new File("data.json")));
+} catch(ValidationException e) {
+	// Invalid JSON!
+}
 ```
 Tracing
 -------
 You can see where validation errors happen, this is pretty useful when returning sending it back to a JavaScript web application.
 ```java
-	try {
-		schemaValidator.validate(mapper.readTree(new File("false-data.json")));
-	} catch(ValidationException e) {
-		// Will print something like "object.members[0][1].inner[4].size"
-		// Depends on what you're validating of course.
-		System.out.println(e);
-		// You can use e.getElements() for even deeper inspection
-	}
-
-
+SchemaParser parser = new SchemaParser();
+ObjectMapper mapper = new ObjectMapper();
+SchemaValidator schemaValidator = parser.load(new File("schema.jsons"));
+try {
+	schemaValidator.validate(mapper.readTree(new File("false-data.json")));
+} catch(ValidationException e) {
+	// Will print something like "object.members[0][1].inner[4].size"
+	// Depends on what you're validating of course.
+	System.out.println(e);
+	// You can use e.getElements() for even deeper inspection
+}
 ```
 Custom Element Validators
 =========================
 In SchemaParser the following standard validators are already registered;
 ```java
-	public SchemaParser() {
-		...
-		this.add("String", StringValidator.class);
-		this.add("Bool", BooleanValidator.class);
-		this.add("Boolean", BooleanValidator.class);
-		this.add("Int", IntValidator.class);
-		this.add("Integer", IntValidator.class);
-		...
-	}
+public SchemaParser() {
+	...
+	this.add("String", StringValidator.class);
+	this.add("Bool", BooleanValidator.class);
+	this.add("Boolean", BooleanValidator.class);
+	this.add("Int", IntValidator.class);
+	this.add("Integer", IntValidator.class);
+	...
+}
 ```
 You can register your own custom validators at a SchemaParser, the SchemaParser
 will then create instances of these validators when they are used in a schema file.
@@ -120,12 +118,13 @@ public class TestValidator extends ElementValidator {
 ```
 Example on how to use the ValidationContext -- See also: test/tests/Tests.java
 ```java
-	SchemaParser parser = new SchemaParser();
-	parser.add("Test", TestValidator.class);
-	SchemaValidator validator = parser.load(basicCustomSchema);
-	ValidationContext context = validator.validate(mapper.readTree(basicJson));
-	@SuppressWarnings("unchecked")
-	Map<String, String> members = (Map<String, String>) context.get("Members");
-	assertEquals("Data1", members.get("Member1"));
-	assertEquals("Data2", members.get("Member2"));
+SchemaParser parser = new SchemaParser();
+parser.add("Test", TestValidator.class);
+SchemaValidator validator = parser.load(basicCustomSchema);
+ValidationContext context = validator.validate(mapper.readTree(basicJson));
+@SuppressWarnings("unchecked")
+Map<String, String> members = (Map<String, String>) context.get("Members");
+for(Map.Entry<String, String> entry : members.entrySet()){
+	// Do something with loaded data
+}
 ```
