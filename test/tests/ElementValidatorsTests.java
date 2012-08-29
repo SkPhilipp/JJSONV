@@ -33,7 +33,7 @@ public class ElementValidatorsTests {
 			ObjectValidator validator = parser.load(basicSchema);
 			validator.validate(mapper.readTree(basicJsonError));
 		} catch (ValidationException e) {
-			assertEquals("model.members[1].size", e.getTrace().toString());
+			assertEquals("model.members[1].size", e.toString());
 		}
 	}
 

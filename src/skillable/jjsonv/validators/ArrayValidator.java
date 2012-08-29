@@ -6,7 +6,6 @@ import org.codehaus.jackson.JsonNode;
 
 import skillable.jjsonv.validators.trace.ValidationException;
 import skillable.jjsonv.validators.trace.ValidationParams;
-import skillable.jjsonv.validators.trace.ValidationTrace;
 import skillable.jjsonv.validators.trace.ValidationTraceElement;
 
 public class ArrayValidator extends Validator {
@@ -18,21 +17,24 @@ public class ArrayValidator extends Validator {
 	}
 
 	@Override
-	protected final void validate(ValidationTrace trace, ValidationParams params)
+	protected final void validate(ValidationParams params)
 			throws ValidationException {
 		JsonNode node = params.getNode();
-		trace.add(new ValidationTraceElement(this, params));
-		if (node.isArray() == false)
-			throw new ValidationException(trace);
-		final Iterator<JsonNode> iter = node.getElements();
-		Integer index = 0;
-		while (iter.hasNext()) {
-			ValidationParams iterParams = new ValidationParams(iter.next(),
-					index.toString(), true);
-			validator.validate(trace, iterParams);
-			index++;
+		try {
+			if (node.isArray() == false)
+				throw new ValidationException();
+			final Iterator<JsonNode> iter = node.getElements();
+			Integer index = 0;
+			while (iter.hasNext()) {
+				ValidationParams iterParams = new ValidationParams(iter.next(),
+						index.toString(), true);
+				validator.validate(iterParams);
+				index++;
+			}
+		} catch (ValidationException e) {
+			e.add(new ValidationTraceElement(this, params));
+			throw e;
 		}
-		trace.pop();
 	}
 
 }

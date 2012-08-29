@@ -8,7 +8,6 @@ import org.codehaus.jackson.JsonNode;
 
 import skillable.jjsonv.validators.trace.ValidationException;
 import skillable.jjsonv.validators.trace.ValidationParams;
-import skillable.jjsonv.validators.trace.ValidationTrace;
 import skillable.jjsonv.validators.trace.ValidationTraceElement;
 
 public class ObjectValidator extends Validator {
@@ -20,25 +19,24 @@ public class ObjectValidator extends Validator {
 	}
 
 	@Override
-	protected final void validate(ValidationTrace trace, ValidationParams params)
+	protected final void validate(ValidationParams params)
 			throws ValidationException {
-		JsonNode node = params.getNode();
-		trace.add(new ValidationTraceElement(this, params));
 		try {
+			JsonNode node = params.getNode();
 			for (Entry<String, Validator> entry : map.entrySet()) {
 				final String name = entry.getKey();
 				final Validator validator = entry.getValue();
 				if (node.has(name) == false) {
-					throw new ValidationException(trace);
+					throw new ValidationException();
 				}
 				ValidationParams memberParams = new ValidationParams(
 						node.get(name), name, false);
-				validator.validate(trace, memberParams);
+				validator.validate(memberParams);
 			}
 		} catch (ValidationException e) {
+			e.add(new ValidationTraceElement(this, params));
 			throw e;
 		}
-		trace.pop();
 	}
 
 	public void set(String key, Validator validator) {
@@ -47,8 +45,7 @@ public class ObjectValidator extends Validator {
 
 	public void validate(JsonNode node) throws ValidationException {
 		ValidationParams params = new ValidationParams(node, null, false);
-		ValidationTrace trace = new ValidationTrace();
-		validate(trace, params);
+		validate(params);
 	}
 
 }
