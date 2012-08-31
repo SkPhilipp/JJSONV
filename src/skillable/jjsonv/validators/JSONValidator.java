@@ -5,7 +5,7 @@ import org.codehaus.jackson.JsonNode;
 import skillable.jjsonv.validators.trace.ValidationException;
 import skillable.jjsonv.validators.trace.ValidationParams;
 
-public class SchemaValidator {
+public class JSONValidator {
 
 	private final ObjectValidator top;
 
@@ -16,7 +16,7 @@ public class SchemaValidator {
 		return context;
 	}
 
-	public SchemaValidator(ObjectValidator top) {
+	public JSONValidator(ObjectValidator top) {
 		this.top = top;
 	}
 

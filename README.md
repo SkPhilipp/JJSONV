@@ -84,7 +84,7 @@ ValidationContext is data that is passed to every ElementValidator, the ElementV
 and add more data to it - It's very useful for expensive loads such as a custom "UserValidator", so that after
 checking if your User objects exists in the database, and obtaining a reference to it; You can then store that
 already loaded data into the ValidationContext. The ValidationContext is returned
-by ```SchemaValidator.validate(JsonNode)```, you can then read all your data from the ValidationContext.
+by ```JSONValidator.validate(JsonNode)```, you can then read all your data from the ValidationContext.
 
 Here's an example of a validator that only accepts existing "members" -- See also: test/tests/TestValidator.java
 ( This validator will create a map to store data it's data in - note that it doesn't check 
@@ -121,7 +121,7 @@ Example on how to use the ValidationContext -- See also: test/tests/Tests.java
 ```java
 SchemaParser parser = new SchemaParser();
 parser.add("Test", TestValidator.class);
-SchemaValidator validator = parser.load(basicCustomSchema);
+JSONValidator validator = parser.load(basicCustomSchema);
 ValidationContext context = validator.validate(mapper.readTree(basicJson));
 @SuppressWarnings("unchecked")
 Map<String, String> members = (Map<String, String>) context.get("Members");

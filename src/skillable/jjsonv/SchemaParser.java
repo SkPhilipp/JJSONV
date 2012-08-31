@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import skillable.jjsonv.validators.ArrayValidator;
 import skillable.jjsonv.validators.ObjectValidator;
-import skillable.jjsonv.validators.SchemaValidator;
+import skillable.jjsonv.validators.JSONValidator;
 import skillable.jjsonv.validators.Validator;
 import skillable.jjsonv.validators.elements.BooleanValidator;
 import skillable.jjsonv.validators.elements.ElementValidator;
@@ -55,7 +55,7 @@ public class SchemaParser {
 	 */
 	// TODO: Support for ElementValidators with parameters (RegexValidator)
 	// TODO: Support for arrays of non Object[] type
-	public SchemaValidator load(Reader reader) throws SchemaParsingException,
+	public JSONValidator load(Reader reader) throws SchemaParsingException,
 			IOException {
 
 		BufferedReader lineReader = new BufferedReader(reader);
@@ -116,7 +116,7 @@ public class SchemaParser {
 						lineContent, lineCount));
 			}
 		}
-		return new SchemaValidator(top);
+		return new JSONValidator(top);
 
 	}
 
@@ -124,7 +124,7 @@ public class SchemaParser {
 	 * SchemaParser.load(Reader) alternative. This creates a FileReader around
 	 * the given File, and closes it when done
 	 */
-	public SchemaValidator load(File file) throws SchemaParsingException,
+	public JSONValidator load(File file) throws SchemaParsingException,
 			IOException {
 		Reader reader = (new FileReader(file));
 		try {

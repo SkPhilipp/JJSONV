@@ -9,7 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 import skillable.jjsonv.SchemaParser;
-import skillable.jjsonv.validators.SchemaValidator;
+import skillable.jjsonv.validators.JSONValidator;
 import skillable.jjsonv.validators.ValidationContext;
 import skillable.jjsonv.validators.trace.ValidationException;
 
@@ -24,7 +24,7 @@ public class Tests {
 	@Test
 	public void testValidation() throws Exception {
 		SchemaParser parser = new SchemaParser();
-		SchemaValidator validator = parser.load(basicSchema);
+		JSONValidator validator = parser.load(basicSchema);
 		validator.validate(mapper.readTree(basicJson));
 	}
 
@@ -32,7 +32,7 @@ public class Tests {
 	public void testValidationTrace() throws Exception {
 		try {
 			SchemaParser parser = new SchemaParser();
-			SchemaValidator validator = parser.load(basicSchema);
+			JSONValidator validator = parser.load(basicSchema);
 			validator.validate(mapper.readTree(basicJsonError));
 		} catch (ValidationException e) {
 			assertEquals("model.members[1].size", e.toString());
@@ -43,7 +43,7 @@ public class Tests {
 	public void textValidationContext() throws Exception {
 		SchemaParser parser = new SchemaParser();
 		parser.add("Test", TestValidator.class);
-		SchemaValidator validator = parser.load(basicCustomSchema);
+		JSONValidator validator = parser.load(basicCustomSchema);
 		ValidationContext context = validator.validate(mapper
 				.readTree(basicJson));
 		@SuppressWarnings("unchecked")
