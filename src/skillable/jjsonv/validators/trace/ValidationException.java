@@ -27,6 +27,11 @@ public class ValidationException extends Exception {
 	}
 
 	@Override
+	public String getMessage() {
+		return "JSON Validation Exception at: " + this.toString();
+	}
+
+	@Override
 	public String toString() {
 		String string = "";
 		for (int i = 0; i < list.size(); i++) {
