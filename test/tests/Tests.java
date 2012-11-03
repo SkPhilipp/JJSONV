@@ -2,15 +2,23 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import skillable.jjsonv.Schema;
 import skillable.jjsonv.SchemaFactory;
+import skillable.jjsonv.SchemaParser;
+import skillable.jjsonv.SchemaWriter;
 import skillable.jjsonv.validators.ValidationContext;
 import skillable.jjsonv.validators.trace.ValidationException;
 
@@ -72,7 +80,33 @@ public class Tests {
 		Map<String, String> members = (Map<String, String>) context.get("Members");
 		assertEquals("Data1", members.get("Member1"));
 		assertEquals("Data2", members.get("Member2"));
+	}
 
+	/**
+	 * Loads a schema file, writes it using SchemaWriter, then compares written to original.
+	 */
+	@Test
+	public void testSchemaWriter() throws Exception {
+		SchemaParser parser = new SchemaParser();
+		SchemaWriter writer = new SchemaWriter();
+		// Read and write file
+		FileReader reader = new FileReader(basicCustomSchema);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		writer.write(parser.load(reader), new PrintWriter(baos));
+		reader.close();
+		// Read each line and compare
+		BufferedReader readerA = new BufferedReader(new FileReader(basicCustomSchema));
+		BufferedReader readerB = new BufferedReader(new StringReader(new String(baos.toByteArray())));
+		String a = readerA.readLine();
+		String b = readerB.readLine();
+		while (a != null && b != null) {
+			Assert.assertEquals(a, b);
+			a = readerA.readLine();
+			b = readerB.readLine();
+		}
+		Assert.assertEquals(a, b);
+		readerA.close();
+		readerB.close();
 	}
 
 }
