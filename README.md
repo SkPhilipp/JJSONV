@@ -1,46 +1,46 @@
 JJSONV
 ======
 
-- Note : This readme needs updating.
-
 Java JSON Validator
 - Requires Jackson ASL 1.9.7 Core & Mapper
 
 Schemas
 -------
-Speaks for itself, the only array type supported as of now is Object[]
-Object content is detected by _tabs_, do not use more tabs than you should use ( think python )
+It simply speaks for itself, how amazingly easy to use!
+
+Object content is detected by _tabs_, do not use more tabs than you should use.
 ```
-model:Object
-	name:String
-	public:Boolean
-	members:Object[]
-		name:String
-		size:Int
-pages:Object[]
-	design:String
+model:object
+	name:string
+	public:boolean
+	members:object[]
+		name:string
+		size:int
+pages:object[]
+	design:string
 ```
+_note_: You can nest arrays as deep as you want!
 Validating
 ==========
 ```java
-SchemaParser parser = new SchemaParser();
+SchemaFactory factory = new SchemaFactory();
 ObjectMapper mapper = new ObjectMapper();
-SchemaValidator schemaValidator = parser.load(new File("schema.jsons"));
+Schema schema = factory.create(new File("schema.jsons"));
 try {
-	schemaValidator.validate(mapper.readTree(new File("data.json")));
+	schema.validate(mapper.readTree(new File("data.json")));
 } catch(ValidationException e) {
 	// Invalid JSON!
 }
 ```
 Tracing
 -------
-You can see where validation errors happen, this is pretty useful when returning sending it back to a JavaScript web application.
+You can see where validation errors happen, this is incredibly useful when sending it back to a JavaScript web application.
 ```java
-SchemaParser parser = new SchemaParser();
+SchemaFactory factory = new SchemaFactory();
 ObjectMapper mapper = new ObjectMapper();
-SchemaValidator schemaValidator = parser.load(new File("schema.jsons"));
+Schema schema = factory.create(new File("schema.jsons"));
 try {
-	schemaValidator.validate(mapper.readTree(new File("false-data.json")));
+	schema.validate(mapper.readTree(new File("false-data.json")));
 } catch(ValidationException e) {
 	// Will print something like "object.members[0][1].inner[4].size"
 	// Depends on what you're validating of course.
@@ -50,26 +50,21 @@ try {
 ```
 Custom Element Validators
 =========================
-In SchemaParser the following standard validators are already registered;
+A SchemaFactory has the following standard validators preregistered;
 ```java
-public SchemaParser() {
-	...
-	this.add("String", StringValidator.class);
-	this.add("Bool", BooleanValidator.class);
-	this.add("Boolean", BooleanValidator.class);
-	this.add("Int", IntValidator.class);
-	this.add("Integer", IntValidator.class);
-	...
+public SchemaFactory() {
+	validators = new HashMap<String, Class<? extends Validator>>();
+	validators.put("string", StringValidator.class);
+	validators.put("bool", BooleanValidator.class);
+	validators.put("boolean", BooleanValidator.class);
+	validators.put("int", IntValidator.class);
+	validators.put("integer", IntValidator.class);
+	validators.put("object", PlainObjectValidator.class);
 }
 ```
-You can register your own custom validators at a SchemaParser, the SchemaParser
+You can register your own custom validators at a SchemaFactory, the SchemaFactory
 will then create instances of these validators when they are used in a schema file.
-For example:
-```java
-SchemaParser schemaParser = new SchemaParser();
-schemaParser.add("Thing", MyThingValidator.class);
-```
-Simple example of a validator that accepts JSON values that are integers or strings
+Here's a simple example of a validator that accepts JSON values that are integers or strings
 ```java
 public class IntOrStringValidator extends ElementValidator {
 
@@ -80,19 +75,33 @@ public class IntOrStringValidator extends ElementValidator {
 
 }
 ```
+And this is how you can regiser it!
+```java
+SchemaFactory factory = new SchemaFactory();
+factory.add("thing", IntOrStringValidator.class);
+```
+Easy right? You should extend either ```skillable.jjsonv.validators.ElementValidator``` or ```skillable.jjsonv.validators.ObjectValidator```
 Validation Context
 ==================
-ValidationContext is data that is passed to every ElementValidator, the ElementValidators can read from it
+ValidationContext is data that is passed to every Validator, the Validators can read from it
 and add more data to it - It's very useful for expensive loads such as a custom "UserValidator", so that after
 checking if your User objects exists in the database, and obtaining a reference to it; You can then store that
 already loaded data into the ValidationContext. The ValidationContext is returned
-by ```JSONValidator.validate(JsonNode)```, you can then read all your data from the ValidationContext.
+by ```Schema.validate(JsonNode)```, you can then read all your data from the ValidationContext.
 
 Here's an example of a validator that only accepts existing "members" -- See also: test/tests/TestValidator.java
 ( This validator will create a map to store data it's data in - note that it doesn't check 
 wether or not the "member" was already loaded into the ValidationContext )
 ```java
 public class TestValidator extends ElementValidator {
+
+	private final Map<String, String> existingMembers;
+
+	public TestValidator() {
+		existingMembers = new HashMap<String, String>();
+		existingMembers.put("Member1", "Data1");
+		existingMembers.put("Member2", "Data2");
+	}
 
 	@Override
 	public boolean ok(JsonNode node, ValidationContext context) {
@@ -101,7 +110,7 @@ public class TestValidator extends ElementValidator {
 			return false;
 		// Load up our existing member
 		String key = node.getTextValue();
-		String value = MyDatabase.expensiveMemberLoad(key);
+		String value = existingMembers.get(key);
 		if (value == null)
 			return false;
 		// Get or create our map
@@ -120,11 +129,11 @@ public class TestValidator extends ElementValidator {
 }
 ```
 Example on how to use the ValidationContext -- See also: test/tests/Tests.java
-```java
-SchemaParser parser = new SchemaParser();
-parser.add("Test", TestValidator.class);
-JSONValidator validator = parser.load(basicCustomSchema);
-ValidationContext context = validator.validate(mapper.readTree(basicJson));
+```
+// Load custom schema
+Schema schema = factory.create(basicCustomSchema);
+// Get the result of validation
+ValidationContext context = schema.validate(mapper.readTree(basicJson));
 @SuppressWarnings("unchecked")
 Map<String, String> members = (Map<String, String>) context.get("Members");
 for(Map.Entry<String, String> entry : members.entrySet()){
