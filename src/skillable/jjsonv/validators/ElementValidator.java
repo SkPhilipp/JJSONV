@@ -1,21 +1,23 @@
-package skillable.jjsonv.validators.elements;
+package skillable.jjsonv.validators;
 
 import org.codehaus.jackson.JsonNode;
 
-import skillable.jjsonv.validators.ValidationContext;
-import skillable.jjsonv.validators.Validator;
 import skillable.jjsonv.validators.trace.ValidationException;
 import skillable.jjsonv.validators.trace.ValidationParams;
 import skillable.jjsonv.validators.trace.ValidationTraceElement;
 
-public abstract class ElementValidator extends Validator {
+/**
+ * 
+ * @author SkPhilipp
+ *
+ */
+public abstract class ElementValidator implements Validator {
 
 	abstract public boolean ok(JsonNode node, ValidationContext context);
 
 	@Override
-	public final void validate(ValidationParams params,
-			ValidationContext context) throws ValidationException {
-		if (this.ok(params.getNode(), context) == false) {
+	public final void validate(ValidationParams params, ValidationContext context) throws ValidationException {
+		if (!this.ok(params.getNode(), context)) {
 			ValidationException exception = new ValidationException();
 			exception.add(new ValidationTraceElement(this, params));
 			throw exception;

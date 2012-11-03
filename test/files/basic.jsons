@@ -1,8 +1,8 @@
-model:Object
-	name:String
-	public:Boolean
-	members:Object[]
-		name:String
-		size:Int
-pages:Object[]
-	design:String
+model:object
+	name:string
+	public:boolean
+	members:object[]
+		name:string
+		size:int
+pages:object[]
+	design:string

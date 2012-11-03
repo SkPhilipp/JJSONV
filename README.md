@@ -1,6 +1,8 @@
 JJSONV
 ======
 
+- Note : This readme needs updating.
+
 Java JSON Validator
 - Requires Jackson ASL 1.9.7 Core & Mapper
 

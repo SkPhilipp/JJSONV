@@ -8,7 +8,12 @@ import skillable.jjsonv.validators.trace.ValidationException;
 import skillable.jjsonv.validators.trace.ValidationParams;
 import skillable.jjsonv.validators.trace.ValidationTraceElement;
 
-public class ArrayValidator extends Validator {
+/**
+ * 
+ * @author SkPhilipp
+ *
+ */
+public class ArrayValidator implements Validator {
 
 	private final Validator validator;
 
@@ -17,17 +22,16 @@ public class ArrayValidator extends Validator {
 	}
 
 	@Override
-	protected final void validate(ValidationParams params,
-			ValidationContext context) throws ValidationException {
+	public final void validate(ValidationParams params, ValidationContext context) throws ValidationException {
 		JsonNode node = params.getNode();
 		try {
-			if (node.isArray() == false)
+			if (!node.isArray()) {
 				throw new ValidationException();
+			}
 			final Iterator<JsonNode> iter = node.getElements();
 			Integer index = 0;
 			while (iter.hasNext()) {
-				ValidationParams iterParams = new ValidationParams(iter.next(),
-						index.toString(), true);
+				ValidationParams iterParams = new ValidationParams(iter.next(), index.toString(), true);
 				validator.validate(iterParams, context);
 				index++;
 			}
