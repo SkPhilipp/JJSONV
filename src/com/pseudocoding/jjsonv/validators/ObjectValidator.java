@@ -1,4 +1,4 @@
-package skillable.jjsonv.validators;
+package com.pseudocoding.jjsonv.validators;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,9 +7,10 @@ import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 
-import skillable.jjsonv.validators.trace.ValidationException;
-import skillable.jjsonv.validators.trace.ValidationParams;
-import skillable.jjsonv.validators.trace.ValidationTraceElement;
+import com.pseudocoding.jjsonv.validators.trace.ValidationException;
+import com.pseudocoding.jjsonv.validators.trace.ValidationParams;
+import com.pseudocoding.jjsonv.validators.trace.ValidationTraceElement;
+
 
 /**
  * 

@@ -1,9 +1,10 @@
-package skillable.jjsonv.validators.elements;
+package com.pseudocoding.jjsonv.validators.elements;
 
 import org.codehaus.jackson.JsonNode;
 
-import skillable.jjsonv.validators.ObjectValidator;
-import skillable.jjsonv.validators.ValidationContext;
+import com.pseudocoding.jjsonv.validators.ObjectValidator;
+import com.pseudocoding.jjsonv.validators.ValidationContext;
+
 
 /**
  * 

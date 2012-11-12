@@ -1,4 +1,4 @@
-package skillable.jjsonv;
+package com.pseudocoding.jjsonv;
 
 import java.io.IOException;
 import java.io.Reader;

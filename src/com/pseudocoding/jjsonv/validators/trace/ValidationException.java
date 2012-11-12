@@ -1,4 +1,4 @@
-package skillable.jjsonv.validators.trace;
+package com.pseudocoding.jjsonv.validators.trace;
 
 import java.util.ArrayList;
 import java.util.List;

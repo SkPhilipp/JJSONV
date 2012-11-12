@@ -1,4 +1,4 @@
-package skillable.jjsonv;
+package com.pseudocoding.jjsonv;
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,13 +11,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import skillable.jjsonv.validators.ArrayValidator;
-import skillable.jjsonv.validators.ObjectValidator;
-import skillable.jjsonv.validators.Validator;
-import skillable.jjsonv.validators.elements.BooleanValidator;
-import skillable.jjsonv.validators.elements.IntValidator;
-import skillable.jjsonv.validators.elements.PlainObjectValidator;
-import skillable.jjsonv.validators.elements.StringValidator;
+import com.pseudocoding.jjsonv.validators.ArrayValidator;
+import com.pseudocoding.jjsonv.validators.ObjectValidator;
+import com.pseudocoding.jjsonv.validators.Validator;
+import com.pseudocoding.jjsonv.validators.elements.BooleanValidator;
+import com.pseudocoding.jjsonv.validators.elements.IntValidator;
+import com.pseudocoding.jjsonv.validators.elements.PlainObjectValidator;
+import com.pseudocoding.jjsonv.validators.elements.StringValidator;
+
 
 /**
  * 

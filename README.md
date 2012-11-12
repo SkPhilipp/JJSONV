@@ -80,7 +80,7 @@ And this is how you can regiser it!
 SchemaFactory factory = new SchemaFactory();
 factory.add("thing", IntOrStringValidator.class);
 ```
-Easy right? You should extend either ```skillable.jjsonv.validators.ElementValidator``` or ```skillable.jjsonv.validators.ObjectValidator```
+Easy right? You should extend either ```com.pseudocoding.jjsonv.validators.ElementValidator``` or ```com.pseudocoding.jjsonv.validators.ObjectValidator```
 Validation Context
 ==================
 ValidationContext is data that is passed to every Validator, the Validators can read from it

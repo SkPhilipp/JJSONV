@@ -5,8 +5,9 @@ import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
-import skillable.jjsonv.validators.ElementValidator;
-import skillable.jjsonv.validators.ValidationContext;
+import com.pseudocoding.jjsonv.validators.ElementValidator;
+import com.pseudocoding.jjsonv.validators.ValidationContext;
+
 
 /**
  * Validator to test the functionality of ValidationContext with; It adds data

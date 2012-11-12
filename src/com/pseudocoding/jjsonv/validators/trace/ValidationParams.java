@@ -1,4 +1,4 @@
-package skillable.jjsonv.validators.trace;
+package com.pseudocoding.jjsonv.validators.trace;
 
 import org.codehaus.jackson.JsonNode;
 

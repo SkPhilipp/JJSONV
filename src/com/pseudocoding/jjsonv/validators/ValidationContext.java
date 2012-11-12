@@ -1,4 +1,4 @@
-package skillable.jjsonv.validators;
+package com.pseudocoding.jjsonv.validators;
 
 import java.util.HashMap;
 

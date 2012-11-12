@@ -15,12 +15,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import skillable.jjsonv.Schema;
-import skillable.jjsonv.SchemaFactory;
-import skillable.jjsonv.SchemaParser;
-import skillable.jjsonv.SchemaWriter;
-import skillable.jjsonv.validators.ValidationContext;
-import skillable.jjsonv.validators.trace.ValidationException;
+import com.pseudocoding.jjsonv.Schema;
+import com.pseudocoding.jjsonv.SchemaFactory;
+import com.pseudocoding.jjsonv.SchemaParser;
+import com.pseudocoding.jjsonv.SchemaWriter;
+import com.pseudocoding.jjsonv.validators.ValidationContext;
+import com.pseudocoding.jjsonv.validators.trace.ValidationException;
+
 
 /**
  * 

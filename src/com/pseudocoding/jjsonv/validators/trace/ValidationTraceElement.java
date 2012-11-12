@@ -1,6 +1,6 @@
-package skillable.jjsonv.validators.trace;
+package com.pseudocoding.jjsonv.validators.trace;
 
-import skillable.jjsonv.validators.Validator;
+import com.pseudocoding.jjsonv.validators.Validator;
 
 public class ValidationTraceElement {
 
