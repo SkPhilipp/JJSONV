@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>JJSONV by Skillable</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>JJSONV</h1>
+          <h2>Java JSON Validator using YAML-like shemas.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Skillable/JJSONV/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Skillable/JJSONV/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Skillable/JJSONV" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p>Java JSON Validator</p>
+
+<ul>
+<li>Requires Jackson ASL 1.9.7 Core &amp; Mapper</li>
+</ul><h2>Schemas</h2>
+
+<p>It simply speaks for itself, how amazingly easy to use!</p>
+
+<p>Object content is detected by <em>tabs</em>, do not use more tabs than you should use.</p>
+
+<pre><code>model:object
+    name:string
+    public:boolean
+    members:object[]
+        name:string
+        size:int
+pages:object[]
+    design:string
+</code></pre>
+
+<p><em>note</em>: You can nest arrays as deep as you want!</p>
+
+<h1>Validating</h1>
+
+<div class="highlight"><pre><span class="n">SchemaFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SchemaFactory</span><span class="o">();</span>
+<span class="n">ObjectMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="o">();</span>
+<span class="n">Schema</span> <span class="n">schema</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"schema.jsons"</span><span class="o">));</span>
+<span class="k">try</span> <span class="o">{</span>
+    <span class="n">schema</span><span class="o">.</span><span class="na">validate</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">readTree</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"data.json"</span><span class="o">)));</span>
+<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">ValidationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Invalid JSON!</span>
+<span class="o">}</span>
+</pre></div>
+
+<h2>Tracing</h2>
+
+<p>You can see where validation errors happen, this is incredibly useful when sending it back to a JavaScript web application.</p>
+
+<div class="highlight"><pre><span class="n">SchemaFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SchemaFactory</span><span class="o">();</span>
+<span class="n">ObjectMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="o">();</span>
+<span class="n">Schema</span> <span class="n">schema</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"schema.jsons"</span><span class="o">));</span>
+<span class="k">try</span> <span class="o">{</span>
+    <span class="n">schema</span><span class="o">.</span><span class="na">validate</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">readTree</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"false-data.json"</span><span class="o">)));</span>
+<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">ValidationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Will print something like "object.members[0][1].inner[4].size"</span>
+    <span class="c1">// Depends on what you're validating of course.</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="c1">// You can use e.getElements() for even deeper inspection</span>
+<span class="o">}</span>
+</pre></div>
+
+<h1>Custom Element Validators</h1>
+
+<p>A SchemaFactory has the following standard validators preregistered;</p>
+
+<div class="highlight"><pre><span class="kd">public</span> <span class="nf">SchemaFactory</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">validators</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Validator</span><span class="o">&gt;&gt;();</span>
+    <span class="n">validators</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"string"</span><span class="o">,</span> <span class="n">StringValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">validators</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"bool"</span><span class="o">,</span> <span class="n">BooleanValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">validators</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"boolean"</span><span class="o">,</span> <span class="n">BooleanValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">validators</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"int"</span><span class="o">,</span> <span class="n">IntValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">validators</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"integer"</span><span class="o">,</span> <span class="n">IntValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">validators</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"object"</span><span class="o">,</span> <span class="n">PlainObjectValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>You can register your own custom validators at a SchemaFactory, the SchemaFactory
+will then create instances of these validators when they are used in a schema file.
+Here's a simple example of a validator that accepts JSON values that are integers or strings</p>
+
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IntOrStringValidator</span> <span class="kd">extends</span> <span class="n">ElementValidator</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">ok</span><span class="o">(</span><span class="n">JsonNode</span> <span class="n">node</span><span class="o">,</span> <span class="n">ValidationContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="na">isInt</span><span class="o">()</span> <span class="o">||</span> <span class="n">node</span><span class="o">.</span><span class="na">isTextual</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>And this is how you can regiser it!</p>
+
+<div class="highlight"><pre><span class="n">SchemaFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SchemaFactory</span><span class="o">();</span>
+<span class="n">factory</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"thing"</span><span class="o">,</span> <span class="n">IntOrStringValidator</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+
+<p>Easy right? You should extend either <code>com.pseudocoding.jjsonv.validators.ElementValidator</code> or <code>com.pseudocoding.jjsonv.validators.ObjectValidator</code></p>
+
+<h1>Validation Context</h1>
+
+<p>ValidationContext is data that is passed to every Validator, the Validators can read from it
+and add more data to it - It's very useful for expensive loads such as a custom "UserValidator", so that after
+checking if your User objects exists in the database, and obtaining a reference to it; You can then store that
+already loaded data into the ValidationContext. The ValidationContext is returned
+by <code>Schema.validate(JsonNode)</code>, you can then read all your data from the ValidationContext.</p>
+
+<p>Here's an example of a validator that only accepts existing "members" -- See also: test/tests/TestValidator.java
+( This validator will create a map to store data it's data in - note that it doesn't check 
+wether or not the "member" was already loaded into the ValidationContext )</p>
+
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestValidator</span> <span class="kd">extends</span> <span class="n">ElementValidator</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">existingMembers</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TestValidator</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">existingMembers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
+        <span class="n">existingMembers</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"Member1"</span><span class="o">,</span> <span class="s">"Data1"</span><span class="o">);</span>
+        <span class="n">existingMembers</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"Member2"</span><span class="o">,</span> <span class="s">"Data2"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">ok</span><span class="o">(</span><span class="n">JsonNode</span> <span class="n">node</span><span class="o">,</span> <span class="n">ValidationContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Check for valid data</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">isTextual</span><span class="o">()</span> <span class="o">==</span> <span class="kc">false</span><span class="o">)</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="c1">// Load up our existing member</span>
+        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getTextValue</span><span class="o">();</span>
+        <span class="n">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">existingMembers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="c1">// Get or create our map</span>
+        <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;)</span> <span class="n">context</span>
+                <span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"Members"</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">members</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
+        <span class="c1">// Add our member which we know exists</span>
+        <span class="n">members</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+        <span class="c1">// Store our members again</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"Members"</span><span class="o">,</span> <span class="n">members</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>Example on how to use the ValidationContext -- See also: test/tests/Tests.java</p>
+
+<pre><code>// Load custom schema
+Schema schema = factory.create(basicCustomSchema);
+// Get the result of validation
+ValidationContext context = schema.validate(mapper.readTree(basicJson));
+@SuppressWarnings("unchecked")
+Map&lt;String, String&gt; members = (Map&lt;String, String&gt;) context.get("Members");
+for(Map.Entry&lt;String, String&gt; entry : members.entrySet()){
+    // Do something with loaded data
+}
+</code></pre>
+        </section>
+
+        <footer>
+          JJSONV is maintained by <a href="https://github.com/Skillable">Skillable</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31675056-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
+  </body>
+</html>
