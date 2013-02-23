@@ -1,4 +1,4 @@
-package com.skillable.jjsonv;
+package org.rogwel.jjsonv;
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,13 +11,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.skillable.jjsonv.validators.ArrayValidator;
-import com.skillable.jjsonv.validators.ObjectValidator;
-import com.skillable.jjsonv.validators.Validator;
-import com.skillable.jjsonv.validators.elements.BooleanValidator;
-import com.skillable.jjsonv.validators.elements.IntValidator;
-import com.skillable.jjsonv.validators.elements.PlainObjectValidator;
-import com.skillable.jjsonv.validators.elements.StringValidator;
+import org.rogwel.jjsonv.validators.ArrayValidator;
+import org.rogwel.jjsonv.validators.ObjectValidator;
+import org.rogwel.jjsonv.validators.Validator;
+import org.rogwel.jjsonv.validators.elements.BooleanValidator;
+import org.rogwel.jjsonv.validators.elements.IntValidator;
+import org.rogwel.jjsonv.validators.elements.PlainObjectValidator;
+import org.rogwel.jjsonv.validators.elements.StringValidator;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.skillable.jjsonv;
+package org.rogwel.jjsonv;
 
 import java.util.regex.Pattern;
 

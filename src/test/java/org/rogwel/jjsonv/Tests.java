@@ -1,4 +1,4 @@
-package com.skillable.jjsonv;
+package org.rogwel.jjsonv;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,8 +15,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.skillable.jjsonv.validators.ValidationContext;
-import com.skillable.jjsonv.validators.trace.ValidationException;
+import org.rogwel.jjsonv.validators.ValidationContext;
+import org.rogwel.jjsonv.validators.trace.ValidationException;
 
 /**
  * 

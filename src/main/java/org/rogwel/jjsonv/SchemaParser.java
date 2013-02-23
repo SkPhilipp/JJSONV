@@ -1,4 +1,4 @@
-package com.skillable.jjsonv;
+package org.rogwel.jjsonv;
 
 import java.io.IOException;
 import java.io.Reader;

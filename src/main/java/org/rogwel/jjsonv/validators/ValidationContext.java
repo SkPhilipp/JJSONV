@@ -1,4 +1,4 @@
-package com.skillable.jjsonv.validators;
+package org.rogwel.jjsonv.validators;
 
 import java.util.HashMap;
 

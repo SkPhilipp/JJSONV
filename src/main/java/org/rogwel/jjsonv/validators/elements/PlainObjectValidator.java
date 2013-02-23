@@ -1,9 +1,9 @@
-package com.skillable.jjsonv.validators.elements;
+package org.rogwel.jjsonv.validators.elements;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.skillable.jjsonv.validators.ObjectValidator;
-import com.skillable.jjsonv.validators.ValidationContext;
+import org.rogwel.jjsonv.validators.ObjectValidator;
+import org.rogwel.jjsonv.validators.ValidationContext;
 
 
 /**

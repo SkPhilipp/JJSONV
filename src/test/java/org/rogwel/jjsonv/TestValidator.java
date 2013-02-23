@@ -1,12 +1,12 @@
-package com.skillable.jjsonv;
+package org.rogwel.jjsonv;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.skillable.jjsonv.validators.ElementValidator;
-import com.skillable.jjsonv.validators.ValidationContext;
+import org.rogwel.jjsonv.validators.ElementValidator;
+import org.rogwel.jjsonv.validators.ValidationContext;
 
 /**
  * Validator to test the functionality of ValidationContext with; It adds data

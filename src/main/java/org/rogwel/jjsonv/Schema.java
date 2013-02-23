@@ -1,11 +1,11 @@
-package com.skillable.jjsonv;
+package org.rogwel.jjsonv;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.skillable.jjsonv.validators.ValidationContext;
-import com.skillable.jjsonv.validators.elements.PlainObjectValidator;
-import com.skillable.jjsonv.validators.trace.ValidationException;
-import com.skillable.jjsonv.validators.trace.ValidationParams;
+import org.rogwel.jjsonv.validators.ValidationContext;
+import org.rogwel.jjsonv.validators.elements.PlainObjectValidator;
+import org.rogwel.jjsonv.validators.trace.ValidationException;
+import org.rogwel.jjsonv.validators.trace.ValidationParams;
 
 
 /**

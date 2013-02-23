@@ -1,6 +1,6 @@
-package com.skillable.jjsonv.validators.trace;
+package org.rogwel.jjsonv.validators.trace;
 
-import com.skillable.jjsonv.validators.Validator;
+import org.rogwel.jjsonv.validators.Validator;
 
 public class ValidationTraceElement {
 

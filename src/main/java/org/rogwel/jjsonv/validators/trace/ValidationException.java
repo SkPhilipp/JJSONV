@@ -1,4 +1,4 @@
-package com.skillable.jjsonv.validators.trace;
+package org.rogwel.jjsonv.validators.trace;
 
 import java.util.ArrayList;
 import java.util.List;
