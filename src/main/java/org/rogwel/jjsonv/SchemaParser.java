@@ -5,12 +5,6 @@ import java.io.Reader;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-
-/**
- * 
- * @author SkPhilipp
- *
- */
 public class SchemaParser {
 
 	/**

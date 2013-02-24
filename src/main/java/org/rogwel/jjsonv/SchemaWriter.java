@@ -3,12 +3,6 @@ package org.rogwel.jjsonv;
 import java.io.IOException;
 import java.io.Writer;
 
-
-/**
- * 
- * @author SkPhilipp
- *
- */
 public class SchemaWriter {
 
 	/**

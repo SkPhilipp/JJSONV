@@ -3,11 +3,6 @@ package org.rogwel.jjsonv;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 
- * @author SkPhilipp
- *
- */
 public class SchemaElement {
 
 	private final String namespace;

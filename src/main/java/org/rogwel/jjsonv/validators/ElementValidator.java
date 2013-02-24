@@ -1,20 +1,13 @@
 package org.rogwel.jjsonv.validators;
 
-import org.codehaus.jackson.JsonNode;
-
+import org.rogwel.jjsonv.node.Node;
 import org.rogwel.jjsonv.validators.trace.ValidationException;
 import org.rogwel.jjsonv.validators.trace.ValidationParams;
 import org.rogwel.jjsonv.validators.trace.ValidationTraceElement;
 
-
-/**
- * 
- * @author SkPhilipp
- *
- */
 public abstract class ElementValidator implements Validator {
 
-	abstract public boolean ok(JsonNode node, ValidationContext context);
+	abstract public boolean ok(Node node, ValidationContext context);
 
 	@Override
 	public final void validate(ValidationParams params, ValidationContext context) throws ValidationException {

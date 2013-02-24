@@ -5,21 +5,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.codehaus.jackson.JsonNode;
-
+import org.rogwel.jjsonv.node.Node;
 import org.rogwel.jjsonv.validators.trace.ValidationException;
 import org.rogwel.jjsonv.validators.trace.ValidationParams;
 import org.rogwel.jjsonv.validators.trace.ValidationTraceElement;
 
-
-/**
- * 
- * @author SkPhilipp
- *
- */
 public abstract class ObjectValidator implements Validator {
 
-	abstract public boolean ok(JsonNode node, ValidationContext context);
+	abstract public boolean ok(Node node, ValidationContext context);
 
 	private final Map<String, Validator> map;
 
@@ -30,7 +23,7 @@ public abstract class ObjectValidator implements Validator {
 	@Override
 	public final void validate(ValidationParams params, ValidationContext context) throws ValidationException {
 		try {
-			JsonNode node = params.getNode();
+			Node node = params.getNode();
 			for (Entry<String, Validator> entry : map.entrySet()) {
 				final String name = entry.getKey();
 				final Validator validator = entry.getValue();

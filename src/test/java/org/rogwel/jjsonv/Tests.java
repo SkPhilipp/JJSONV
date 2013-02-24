@@ -10,19 +10,15 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.rogwel.jjsonv.node.NodeParser;
+import org.rogwel.jjsonv.node.impl.JacksonNodeParser;
 import org.rogwel.jjsonv.validators.ValidationContext;
 import org.rogwel.jjsonv.validators.trace.ValidationException;
 
-/**
- * 
- * @author SkPhilipp
- *
- */
 public class Tests {
 
 	private final File basicSchema = new File(System.getProperty("user.dir") + "/src/test/resources/files/basic.jsons");
@@ -30,7 +26,7 @@ public class Tests {
 	private final File basicJson = new File(System.getProperty("user.dir") + "/src/test/resources/files/basic.json");
 	private final File basicJsonError = new File(System.getProperty("user.dir") + "/src/test/resources/files/basic-error.json");
 
-	private final ObjectMapper mapper = new ObjectMapper();
+	private final NodeParser parser = new JacksonNodeParser();
 	private final SchemaFactory factory = new SchemaFactory();
 
 	/**
@@ -47,7 +43,7 @@ public class Tests {
 	@Test
 	public void testValidation() throws Exception {
 		Schema schema = factory.create(basicSchema);
-		schema.validate(mapper.readTree(basicJson));
+		schema.validate(parser.read(basicJson));
 	}
 
 	/**
@@ -57,7 +53,7 @@ public class Tests {
 	public void testValidationTrace() throws Exception {
 		try {
 			Schema schema = factory.create(basicSchema);
-			schema.validate(mapper.readTree(basicJsonError));
+			schema.validate(parser.read(basicJsonError));
 		} catch (ValidationException e) {
 			assertEquals("model.members[1].size", e.toString());
 		}
@@ -71,7 +67,7 @@ public class Tests {
 		// Load custom schema
 		Schema schema = factory.create(basicCustomSchema);
 		// Get the result of validation
-		ValidationContext context = schema.validate(mapper.readTree(basicJson));
+		ValidationContext context = schema.validate(parser.read(basicJson));
 		@SuppressWarnings("unchecked")
 		Map<String, String> members = (Map<String, String>) context.get("Members");
 		assertEquals("Data1", members.get("Member1"));

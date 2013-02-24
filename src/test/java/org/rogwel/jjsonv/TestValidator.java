@@ -3,15 +3,10 @@ package org.rogwel.jjsonv;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
-
+import org.rogwel.jjsonv.node.Node;
 import org.rogwel.jjsonv.validators.ElementValidator;
 import org.rogwel.jjsonv.validators.ValidationContext;
 
-/**
- * Validator to test the functionality of ValidationContext with; It adds data
- * to a map of "Members" in the ValidationContext.
- */
 public class TestValidator extends ElementValidator {
 
 	private final Map<String, String> existingMembers;
@@ -23,7 +18,7 @@ public class TestValidator extends ElementValidator {
 	}
 
 	@Override
-	public boolean ok(JsonNode node, ValidationContext context) {
+	public boolean ok(Node node, ValidationContext context) {
 		// Check for valid data
 		if (node.isTextual() == false)
 			return false;

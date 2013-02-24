@@ -19,12 +19,6 @@ import org.rogwel.jjsonv.validators.elements.IntValidator;
 import org.rogwel.jjsonv.validators.elements.PlainObjectValidator;
 import org.rogwel.jjsonv.validators.elements.StringValidator;
 
-
-/**
- * 
- * @author SkPhilipp
- *
- */
 public class SchemaFactory {
 
 	private final Map<String, Class<? extends Validator>> validators;

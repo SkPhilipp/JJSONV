@@ -1,14 +1,14 @@
 package org.rogwel.jjsonv.validators.trace;
 
-import org.codehaus.jackson.JsonNode;
+import org.rogwel.jjsonv.node.Node;
 
 public class ValidationParams {
 
-	private final JsonNode node;
+	private final Node node;
 	private final String name;
 	private final Boolean array;
 
-	public JsonNode getNode() {
+	public Node getNode() {
 		return node;
 	}
 
@@ -20,7 +20,7 @@ public class ValidationParams {
 		return array;
 	}
 
-	public ValidationParams(JsonNode node, String name, Boolean array) {
+	public ValidationParams(Node node, String name, Boolean array) {
 		this.node = node;
 		this.name = name;
 		this.array = array;

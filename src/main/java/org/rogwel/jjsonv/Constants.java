@@ -2,16 +2,8 @@ package org.rogwel.jjsonv;
 
 import java.util.regex.Pattern;
 
-/**
- * 
- * @author SkPhilipp
- *
- */
 public final class Constants {
 
-	/**
-	 * We can use java.util.Scanner for reading it back correctly.
-	 */
 	public static final Character CHAR_DEPTH = '\t';
 	public static final Character CHAR_NAMESPACE_BEGIN = '[';
 	public static final Character CHAR_NAMESPACE_END = ']';
